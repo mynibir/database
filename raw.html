@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Raw Content</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            background: #0f0f0f;
+            color: #00ff00;
+            font-family: 'Courier New', monospace; 
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="raw-content">Loading raw content...</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-AUFMFLhZ4wYma78LbtKil1Rcmk_Q8Kg",
+            authDomain: "dashboard-config-ace02.firebaseapp.com",
+            projectId: "dashboard-config-ace02",
+            storageBucket: "dashboard-config-ace02.firebasestorage.app",
+            messagingSenderId: "166283646188",
+            appId: "1:166283646188:web:5e7f1ffd9a0d414f9881c9",
+            measurementId: "G-52F0L8BCMJ"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        async function loadRawContent() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileName = urlParams.get('name');
+            
+            if (!fileName) {
+                document.getElementById('raw-content').textContent = 'Error: No file name specified';
+                return;
+            }
+
+            try {
+                const snapshot = await db.collection('raw_files')
+                    .where('name', '==', fileName)
+                    .limit(1)
+                    .get();
+                
+                if (snapshot.empty) {
+                    document.getElementById('raw-content').textContent = '404 - File not found';
+                    return;
+                }
+                
+                const file = snapshot.docs[0].data();
+                document.getElementById('raw-content').textContent = file.content;
+                
+            } catch (error) {
+                document.getElementById('raw-content').textContent = 'Error loading file: ' + error.message;
+            }
+        }
+
+        loadRawContent();
+    </script>
+</body>
+</html>
