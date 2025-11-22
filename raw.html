@@ -49,7 +49,7 @@
                     .get();
                 
                 if (snapshot.empty) {
-                    document.getElementById('raw-content').textContent = '404 - File not found';
+                    document.getElementById('raw-content').textContent = '404 - File not found: ' + fileName;
                     return;
                 }
                 
@@ -61,7 +61,7 @@
             }
         }
 
-        loadRawContent();
+        document.addEventListener('DOMContentLoaded', loadRawContent);
     </script>
 </body>
 </html>
