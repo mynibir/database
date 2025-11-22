@@ -3,8 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raw Link Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Raw Link Manager - Fixed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #ff0000;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: rgba(15, 23, 42, 0.6);
+            color: #f8fafc;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ff0000;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #ff0000;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #cc0000;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .raw-file-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .raw-file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .raw-file-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ff0000;
+        }
+
+        .raw-link {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+
+        .raw-content-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 150px;
+            overflow-y: auto;
+            color: #94a3b8;
+        }
+
+        .info-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+        }
+
+        .status-error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff4444;
+        }
+
+        .loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .raw-viewer {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .url-display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ff0000;
+        }
+
+        .url-display code {
+            font-family: 'Courier New', monospace;
+            color: #ff6b6b;
+            word-break: break-all;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        small {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -13,7 +290,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>🔗 Raw Link Manager</h1>
+            <h1>🔗 Raw Link Manager - FIXED</h1>
             <p>Create and manage raw text files with direct links</p>
         </header>
 
@@ -56,9 +333,9 @@
         <!-- Dashboard Card -->
         <div class="card hidden" id="dashboard-card">
             <div class="dashboard-header">
-                <h2>Dashboard</h2>
+                <h2 style="color: #ff0000;">Dashboard</h2>
                 <div>
-                    <span id="user-email"></span>
+                    <span id="user-email" style="color: #94a3b8; margin-right: 15px;"></span>
                     <button class="btn btn-secondary" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -72,7 +349,7 @@
             <!-- Create Raw -->
             <div class="tab-content active" id="create-content">
                 <div class="info-box">
-                    <h3>Create New Raw File</h3>
+                    <h3 style="margin-bottom: 15px;">➕ Create New Raw File</h3>
                     <form id="raw-form">
                         <div class="form-group">
                             <label for="raw-name">File Name (URL)</label>
@@ -95,7 +372,7 @@
             <!-- Manage Files -->
             <div class="tab-content" id="manage-content">
                 <div class="info-box">
-                    <h3>Your Raw Files</h3>
+                    <h3 style="margin-bottom: 15px;">📁 Your Raw Files</h3>
                     <div id="raw-files-list">
                         <div class="empty-state">
                             <p>📄 No raw files created yet</p>
@@ -108,7 +385,7 @@
             <!-- View Raw -->
             <div class="tab-content" id="view-content">
                 <div class="info-box">
-                    <h3>View Raw Content</h3>
+                    <h3 style="margin-bottom: 15px;">👁️ View Raw Content</h3>
                     <div class="form-group">
                         <label for="view-raw-select">Select File</label>
                         <select id="view-raw-select" onchange="loadRawForView()">
@@ -135,7 +412,382 @@
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-AUFMFLhZ4wYma78LbtKil1Rcmk_Q8Kg",
+            authDomain: "dashboard-config-ace02.firebaseapp.com",
+            projectId: "dashboard-config-ace02",
+            storageBucket: "dashboard-config-ace02.firebasestorage.app",
+            messagingSenderId: "166283646188",
+            appId: "1:166283646188:web:5e7f1ffd9a0d414f9881c9",
+            measurementId: "G-52F0L8BCMJ"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let isEditing = false;
+        let editingRawId = null;
+        let currentRawFiles = [];
+
+        function showStatus(message, isSuccess = true) {
+            const statusDiv = document.getElementById('auth-status');
+            statusDiv.innerHTML = `<div class="status-message ${isSuccess ? 'status-success' : 'status-error'}">${message}</div>`;
+            setTimeout(() => statusDiv.innerHTML = '', 5000);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+            
+            if (tabName === 'manage') {
+                loadRawFiles();
+            } else if (tabName === 'view') {
+                populateViewSelector();
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        // Login form
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showStatus('Login successful!');
+            } catch (error) {
+                showStatus('Login failed: ' + error.message, false);
+            }
+        });
+
+        // Register form
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            if (password.length < 6) {
+                showStatus('Password must be at least 6 characters', false);
+                return;
+            }
+
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+                showStatus('Registration successful! Please login.');
+                switchTab('login');
+            } catch (error) {
+                showStatus('Registration failed: ' + error.message, false);
+            }
+        });
+
+        // Logout
+        async function logout() {
+            try {
+                await auth.signOut();
+                showStatus('Logged out successfully!');
+            } catch (error) {
+                showStatus('Logout failed: ' + error.message, false);
+            }
+        }
+
+        // Create or Update raw file
+        document.getElementById('raw-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('raw-name').value.trim().toLowerCase();
+            const version = document.getElementById('raw-version').value.trim();
+            const content = document.getElementById('raw-content').value;
+            const createBtn = document.getElementById('create-raw-btn');
+            
+            if (!name || !version || !content) {
+                showStatus('Please fill in all fields', false);
+                return;
+            }
+            
+            // Validate name (URL-friendly)
+            if (!/^[a-z0-9-]+$/.test(name)) {
+                showStatus('Name can only contain lowercase letters, numbers, and hyphens', false);
+                return;
+            }
+            
+            // Show loading state
+            createBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
+            createBtn.classList.add('loading');
+            createBtn.disabled = true;
+            
+            try {
+                if (isEditing) {
+                    // Update existing raw file
+                    await db.collection('raw_files').doc(editingRawId).update({
+                        name: name,
+                        version: version,
+                        content: content,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showStatus('Raw file updated successfully!');
+                    resetForm();
+                } else {
+                    // Check if name already exists
+                    const existingSnapshot = await db.collection('raw_files')
+                        .where('owner', '==', currentUser.email)
+                        .where('name', '==', name)
+                        .get();
+                    
+                    if (!existingSnapshot.empty) {
+                        showStatus('A file with this name already exists!', false);
+                        createBtn.textContent = 'Create Raw File';
+                        createBtn.classList.remove('loading');
+                        createBtn.disabled = false;
+                        return;
+                    }
+                    
+                    // Create new raw file
+                    await db.collection('raw_files').doc().set({
+                        name: name,
+                        version: version,
+                        content: content,
+                        owner: currentUser.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showStatus('Raw file created successfully!');
+                    resetForm();
+                }
+                
+                // Refresh files list
+                loadRawFiles();
+                
+            } catch (error) {
+                console.error('Error saving raw file:', error);
+                showStatus('Error: ' + error.message, false);
+            } finally {
+                createBtn.textContent = isEditing ? 'Update Raw File' : 'Create Raw File';
+                createBtn.classList.remove('loading');
+                createBtn.disabled = false;
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('raw-form').reset();
+            isEditing = false;
+            editingRawId = null;
+            document.getElementById('create-raw-btn').textContent = 'Create Raw File';
+        }
+
+        // Load raw files
+        async function loadRawFiles() {
+            try {
+                const snapshot = await db.collection('raw_files')
+                    .where('owner', '==', currentUser.email)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                currentRawFiles = [];
+                let html = '';
+                
+                if (snapshot.empty) {
+                    html = `
+                        <div class="empty-state">
+                            <p>📄 No raw files created yet</p>
+                            <button class="btn btn-primary" onclick="switchTab('create')">Create First File</button>
+                        </div>
+                    `;
+                } else {
+                    snapshot.forEach(doc => {
+                        const file = doc.data();
+                        currentRawFiles.push({
+                            id: doc.id,
+                            ...file
+                        });
+                        
+                        const date = file.createdAt ? file.createdAt.toDate().toLocaleDateString() : 'Unknown date';
+                        const preview = file.content.length > 200 ? 
+                            file.content.substring(0, 200) + '...' : file.content;
+                        
+                        html += `
+                            <div class="raw-file-card">
+                                <div class="raw-file-header">
+                                    <span class="raw-file-name">${file.name} (v${file.version})</span>
+                                    <a href="raw-display.html?name=${file.name}" target="_blank" class="raw-link">
+                                        /raw/${file.name}
+                                    </a>
+                                </div>
+                                <div class="raw-content-preview">${preview}</div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                    <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary" onclick="editRawFile('${doc.id}')">Edit</button>
+                                    <button class="btn btn-primary" onclick="viewRawFile('${doc.id}')">View</button>
+                                    <button class="btn" onclick="deleteRawFile('${doc.id}')" style="background: #dc2626; color: white;">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('raw-files-list').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading raw files:', error);
+                document.getElementById('raw-files-list').innerHTML = 
+                    '<p style="color: #ff4444;">Error loading files: ' + error.message + '</p>';
+            }
+        }
+
+        // Edit raw file
+        async function editRawFile(fileId) {
+            try {
+                const fileDoc = await db.collection('raw_files').doc(fileId).get();
+                
+                if (!fileDoc.exists) {
+                    showStatus('File not found', false);
+                    return;
+                }
+                
+                const file = fileDoc.data();
+                
+                document.getElementById('raw-name').value = file.name;
+                document.getElementById('raw-version').value = file.version;
+                document.getElementById('raw-content').value = file.content;
+                
+                // Set editing mode
+                isEditing = true;
+                editingRawId = fileId;
+                document.getElementById('create-raw-btn').textContent = 'Update Raw File';
+                
+                // Switch to create tab
+                switchTab('create');
+                
+            } catch (error) {
+                console.error('Error loading file for edit:', error);
+                showStatus('Error loading file: ' + error.message, false);
+            }
+        }
+
+        // View raw file
+        function viewRawFile(fileId) {
+            const file = currentRawFiles.find(f => f.id === fileId);
+            if (file) {
+                document.getElementById('view-raw-select').value = fileId;
+                loadRawForView();
+                switchTab('view');
+            }
+        }
+
+        // Populate view selector
+        function populateViewSelector() {
+            const selector = document.getElementById('view-raw-select');
+            selector.innerHTML = '<option value="">-- Select a file --</option>';
+            
+            currentRawFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.id;
+                option.textContent = `${file.name} (v${file.version})`;
+                selector.appendChild(option);
+            });
+        }
+
+        // Load raw for viewing
+        function loadRawForView() {
+            const fileId = document.getElementById('view-raw-select').value;
+            if (!fileId) {
+                document.getElementById('raw-view-container').classList.add('hidden');
+                return;
+            }
+            
+            const file = currentRawFiles.find(f => f.id === fileId);
+            if (file) {
+                document.getElementById('raw-content-viewer').textContent = file.content;
+                document.getElementById('raw-url-display').textContent = window.location.origin + '/raw-display.html?name=' + file.name;
+                document.getElementById('raw-view-container').classList.remove('hidden');
+            }
+        }
+
+        // Edit current raw file
+        function editCurrentRaw() {
+            const fileId = document.getElementById('view-raw-select').value;
+            if (fileId) {
+                editRawFile(fileId);
+            }
+        }
+
+        // Copy raw URL
+        function copyRawUrl() {
+            const url = document.getElementById('raw-url-display').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showStatus('URL copied to clipboard!');
+            }).catch(err => {
+                showStatus('Failed to copy URL: ' + err, false);
+            });
+        }
+
+        // Open raw in new tab
+        function openRawInNewTab() {
+            const url = document.getElementById('raw-url-display').textContent;
+            window.open(url, '_blank');
+        }
+
+        // Delete raw file
+        async function deleteRawFile(fileId) {
+            if (!confirm('Are you sure you want to delete this raw file?')) {
+                return;
+            }
+            
+            try {
+                await db.collection('raw_files').doc(fileId).delete();
+                showStatus('Raw file deleted successfully!');
+                loadRawFiles();
+                
+                // Clear view if deleted file was being viewed
+                if (document.getElementById('view-raw-select').value === fileId) {
+                    document.getElementById('view-raw-select').value = '';
+                    document.getElementById('raw-view-container').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error deleting file:', error);
+                showStatus('Error deleting file: ' + error.message, false);
+            }
+        }
+
+        // Firebase Auth State Listener
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            
+            if (user) {
+                document.getElementById('auth-card').classList.add('hidden');
+                document.getElementById('dashboard-card').classList.remove('hidden');
+                document.getElementById('user-email').textContent = user.email;
+                
+                loadRawFiles();
+            } else {
+                document.getElementById('auth-card').classList.remove('hidden');
+                document.getElementById('dashboard-card').classList.add('hidden');
+                resetForm();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Raw Link Manager Initialized - FIXED VERSION');
+        });
+    </script>
 </body>
 </html>
