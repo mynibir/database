@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Version Management System</title>
+    <title>Raw Text Management System</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -105,8 +105,9 @@
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 200px;
             resize: vertical;
+            font-family: 'Courier New', monospace;
         }
 
         input:focus, textarea:focus {
@@ -152,7 +153,7 @@
             background: #3367d6;
         }
 
-        .version-card {
+        .raw-file-card {
             background: rgba(15, 23, 42, 0.6);
             border-radius: 8px;
             padding: 20px;
@@ -160,50 +161,45 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .version-header {
+        .raw-file-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .version-name {
+        .raw-file-name {
             font-size: 1.2em;
             font-weight: 600;
             color: #ff0000;
         }
 
-        .version-number {
+        .raw-link {
             background: rgba(255, 0, 0, 0.2);
-            padding: 4px 8px;
+            padding: 8px 12px;
             border-radius: 4px;
+            font-family: 'Courier New', monospace;
             font-size: 0.9em;
+            color: #ff6b6b;
+            text-decoration: none;
         }
 
-        .version-description {
-            color: #94a3b8;
-            line-height: 1.5;
+        .raw-link:hover {
+            background: rgba(255, 0, 0, 0.3);
         }
 
-        .version-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: 600;
+        .raw-content-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
             margin-top: 10px;
-        }
-
-        .status-active {
-            background: rgba(0, 255, 0, 0.1);
-            color: #00ff00;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-        }
-
-        .status-inactive {
-            background: rgba(255, 0, 0, 0.1);
-            color: #ff4444;
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+            color: #94a3b8;
+            font-size: 0.9em;
         }
 
         .mono-text {
@@ -256,15 +252,16 @@
             margin-top: 15px;
         }
 
-        .raw-content {
+        .raw-viewer {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px;
             margin-top: 15px;
             font-family: 'Courier New', monospace;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 300px;
+            min-height: 300px;
+            max-height: 500px;
             overflow-y: auto;
         }
         
@@ -282,26 +279,38 @@
             background: #2563eb;
         }
 
-        .index-warning {
-            background: rgba(255, 165, 0, 0.1);
-            border: 1px solid rgba(255, 165, 0, 0.3);
+        .url-display {
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 20px;
-            color: #ffa500;
+            margin: 15px 0;
+            border-left: 4px solid #ff0000;
         }
 
-        .index-warning a {
-            color: #ffa500;
-            text-decoration: underline;
+        .url-display code {
+            font-family: 'Courier New', monospace;
+            color: #ff6b6b;
+            word-break: break-all;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🔐 Version Management System</h1>
-            <p>Login to manage your application versions</p>
+            <h1>📝 Raw Text Management</h1>
+            <p>Create and manage raw text files with direct links</p>
         </header>
 
         <!-- Auth Card -->
@@ -356,57 +365,87 @@
                 </div>
             </div>
 
-            <!-- Index Warning -->
-            <div class="index-warning hidden" id="index-warning">
-                <strong>⚠️ Performance Notice:</strong> For better performance, create a Firestore index. 
-                <a href="https://console.firebase.google.com/v1/r/project/dashboard-config-ace02/firestore/indexes?create_composite=Cldwcm9qZWN0cy9kYXNoYm9hcmQtY29uZmlnLWFjZTAyL2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy92ZXJzaW9ucy9pbmRleGVzL18QARoJCgVvd25lchABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI" target="_blank">
-                    Click here to create the index automatically
-                </a>
-            </div>
-
             <div class="tabs">
-                <button class="tab active" data-tab="versions">Version Management</button>
-                <button class="tab" data-tab="raw">Raw Content</button>
+                <button class="tab active" data-tab="manage">Manage Raw Files</button>
+                <button class="tab" data-tab="create">Create New Raw</button>
+                <button class="tab" data-tab="view">View Raw Content</button>
             </div>
 
-            <!-- Version Management -->
-            <div class="tab-content active" id="versions-content">
+            <!-- Manage Files -->
+            <div class="tab-content active" id="manage-content">
                 <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">➕ Create New Version</h3>
-                    <form id="version-form">
+                    <h3 style="margin-bottom: 15px;">📁 Your Raw Files</h3>
+                    <div id="raw-files-list">
+                        <div class="empty-state">
+                            <i>📄</i>
+                            <p>No raw files created yet</p>
+                            <button class="btn btn-primary" onclick="switchTab('create')" style="margin-top: 15px;">
+                                Create Your First Raw File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create New Raw -->
+            <div class="tab-content" id="create-content">
+                <div class="info-box">
+                    <h3 style="margin-bottom: 15px;">➕ Create New Raw File</h3>
+                    <form id="raw-form">
                         <div class="form-group">
-                            <label for="version-name">Version Name</label>
-                            <input type="text" id="version-name" placeholder="Enter version name" required>
+                            <label for="raw-name">File Name (URL Slug)</label>
+                            <input type="text" id="raw-name" placeholder="e.g., my-config, readme, data-json" required>
+                            <small style="color: #94a3b8; margin-top: 5px; display: block;">
+                                This will be used in the URL: your-site.com/raw/[name]
+                            </small>
                         </div>
                         <div class="form-group">
-                            <label for="version-number">Version Number</label>
-                            <input type="text" id="version-number" placeholder="e.g., 1.0.0" required>
+                            <label for="raw-content">Raw Content</label>
+                            <textarea id="raw-content" placeholder="Enter your raw text content here..." required></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="version-description">Description</label>
-                            <textarea id="version-description" placeholder="Enter version description" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="create-version-btn">Create Version</button>
+                        <button type="submit" class="btn btn-primary" id="create-raw-btn">Create Raw File</button>
                     </form>
                 </div>
-
-                <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">📋 Your Versions</h3>
-                    <div id="versions-list">Loading versions...</div>
-                </div>
             </div>
 
-            <!-- Raw Content -->
-            <div class="tab-content" id="raw-content">
+            <!-- View Raw Content -->
+            <div class="tab-content" id="view-content">
                 <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">📄 Raw Version Data</h3>
-                    <p style="margin-bottom: 15px; color: #94a3b8;">
-                        This is the raw content that can be accessed via a direct link. Only the active version is displayed here.
-                    </p>
-                    <div class="raw-content" id="raw-content-display">
-                        No active version available.
+                    <h3 style="margin-bottom: 15px;">👁️ View Raw Content</h3>
+                    <div class="form-group">
+                        <label for="view-raw-select">Select Raw File to View</label>
+                        <select id="view-raw-select" class="form-control" onchange="loadRawForView()">
+                            <option value="">-- Select a file --</option>
+                        </select>
                     </div>
-                    <button class="copy-btn" onclick="copyRawContent()">Copy Raw Content</button>
+                    
+                    <div id="raw-view-container" class="hidden">
+                        <div class="url-display">
+                            <strong>Direct URL:</strong><br>
+                            <code id="raw-url-display">Loading...</code>
+                            <button class="copy-btn" onclick="copyRawUrl()">Copy URL</button>
+                        </div>
+                        
+                        <div class="raw-viewer" id="raw-content-viewer">
+                            Select a file to view content
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="editCurrentRaw()">Edit This File</button>
+                            <button class="btn btn-secondary" onclick="openRawInNewTab()">Open in New Tab</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raw Display Page (would be a separate HTML file in real implementation) -->
+    <div id="raw-display-page" class="hidden">
+        <div class="container">
+            <div class="card">
+                <div id="raw-display-content" style="font-family: 'Courier New', monospace; white-space: pre-wrap;">
+                    Loading...
                 </div>
             </div>
         </div>
@@ -430,7 +469,8 @@
 
         let currentUser = null;
         let isEditing = false;
-        let editingVersionId = null;
+        let editingRawId = null;
+        let currentRawFiles = [];
 
         function showStatus(message, isSuccess = true) {
             const statusDiv = document.getElementById('auth-status');
@@ -444,9 +484,10 @@
             document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
             document.getElementById(`${tabName}-content`).classList.add('active');
             
-            // Refresh raw content when switching to that tab
-            if (tabName === 'raw') {
-                loadRawContent();
+            if (tabName === 'manage') {
+                loadRawFiles();
+            } else if (tabName === 'view') {
+                populateViewSelector();
             }
         }
 
@@ -515,17 +556,22 @@
             }
         }
 
-        // Create or Update version
-        document.getElementById('version-form').addEventListener('submit', async (e) => {
+        // Create or Update raw file
+        document.getElementById('raw-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('version-name').value.trim();
-            const number = document.getElementById('version-number').value.trim();
-            const description = document.getElementById('version-description').value.trim();
-            const createBtn = document.getElementById('create-version-btn');
+            const name = document.getElementById('raw-name').value.trim().toLowerCase();
+            const content = document.getElementById('raw-content').value;
+            const createBtn = document.getElementById('create-raw-btn');
             
-            if (!name || !number || !description) {
+            if (!name || !content) {
                 showStatus('Please fill in all fields', false);
+                return;
+            }
+            
+            // Validate name (URL-friendly)
+            if (!/^[a-z0-9-]+$/.test(name)) {
+                showStatus('Name can only contain lowercase letters, numbers, and hyphens', false);
                 return;
             }
             
@@ -536,298 +582,243 @@
             
             try {
                 if (isEditing) {
-                    // Update existing version
-                    await db.collection('versions').doc(editingVersionId).update({
+                    // Update existing raw file
+                    await db.collection('raw_files').doc(editingRawId).update({
                         name: name,
-                        number: number,
-                        description: description,
+                        content: content,
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    showStatus('Version updated successfully!');
+                    showStatus('Raw file updated successfully!');
                     resetForm();
                 } else {
-                    // Deactivate all previous versions
-                    const versionsSnapshot = await db.collection('versions')
+                    // Check if name already exists
+                    const existingSnapshot = await db.collection('raw_files')
                         .where('owner', '==', currentUser.email)
+                        .where('name', '==', name)
                         .get();
                     
-                    const batch = db.batch();
+                    if (!existingSnapshot.empty) {
+                        showStatus('A file with this name already exists!', false);
+                        createBtn.textContent = 'Create Raw File';
+                        createBtn.classList.remove('loading');
+                        createBtn.disabled = false;
+                        return;
+                    }
                     
-                    versionsSnapshot.forEach(doc => {
-                        batch.update(doc.ref, { isActive: false });
-                    });
-                    
-                    // Create new version
-                    const newVersionRef = db.collection('versions').doc();
-                    batch.set(newVersionRef, {
-                        id: newVersionRef.id,
+                    // Create new raw file
+                    await db.collection('raw_files').doc().set({
                         name: name,
-                        number: number,
-                        description: description,
+                        content: content,
                         owner: currentUser.email,
-                        isActive: true,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    await batch.commit();
-                    showStatus('Version created successfully! Previous versions deactivated.');
+                    showStatus('Raw file created successfully!');
                     resetForm();
                 }
                 
-                // Refresh versions list
-                loadVersions();
+                // Refresh files list
+                loadRawFiles();
                 
             } catch (error) {
-                console.error('Error saving version:', error);
+                console.error('Error saving raw file:', error);
                 showStatus('Error: ' + error.message, false);
             } finally {
-                createBtn.textContent = isEditing ? 'Update Version' : 'Create Version';
+                createBtn.textContent = isEditing ? 'Update Raw File' : 'Create Raw File';
                 createBtn.classList.remove('loading');
                 createBtn.disabled = false;
             }
         });
 
         function resetForm() {
-            document.getElementById('version-form').reset();
+            document.getElementById('raw-form').reset();
             isEditing = false;
-            editingVersionId = null;
-            document.getElementById('create-version-btn').textContent = 'Create Version';
+            editingRawId = null;
+            document.getElementById('create-raw-btn').textContent = 'Create Raw File';
         }
 
-        // Load user versions with fallback for index issues
-        async function loadVersions() {
+        // Load raw files
+        async function loadRawFiles() {
             try {
-                // Try the optimized query first (with ordering)
-                const snapshot = await db.collection('versions')
+                const snapshot = await db.collection('raw_files')
                     .where('owner', '==', currentUser.email)
                     .orderBy('createdAt', 'desc')
                     .get();
                 
-                displayVersions(snapshot);
+                currentRawFiles = [];
+                let html = '';
                 
-            } catch (error) {
-                if (error.code === 'failed-precondition') {
-                    // Show index warning
-                    document.getElementById('index-warning').classList.remove('hidden');
-                    
-                    // Fallback: Load without ordering
-                    try {
-                        const fallbackSnapshot = await db.collection('versions')
-                            .where('owner', '==', currentUser.email)
-                            .get();
-                        
-                        // Sort manually in JavaScript
-                        const sortedDocs = fallbackSnapshot.docs.sort((a, b) => {
-                            const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
-                            const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
-                            return bTime - aTime;
-                        });
-                        
-                        // Create a new snapshot-like object
-                        const manualSnapshot = {
-                            empty: sortedDocs.length === 0,
-                            forEach: (callback) => sortedDocs.forEach(callback)
-                        };
-                        
-                        displayVersions(manualSnapshot);
-                        
-                    } catch (fallbackError) {
-                        console.error('Fallback also failed:', fallbackError);
-                        document.getElementById('versions-list').innerHTML = 
-                            '<p style="color: #ff4444;">Error loading versions: ' + fallbackError.message + '</p>';
-                    }
-                } else {
-                    console.error('Error loading versions:', error);
-                    document.getElementById('versions-list').innerHTML = 
-                        '<p style="color: #ff4444;">Error loading versions: ' + error.message + '</p>';
-                }
-            }
-        }
-
-        // Display versions (common function for both methods)
-        function displayVersions(snapshot) {
-            let html = '';
-            
-            if (snapshot.empty) {
-                html = '<p style="text-align: center; color: #94a3b8;">No versions created yet.</p>';
-            } else {
-                snapshot.forEach(doc => {
-                    const version = doc.data ? doc.data() : doc; // Handle both DocumentSnapshot and plain objects
-                    const date = version.createdAt ? version.createdAt.toDate().toLocaleDateString() : 'Unknown date';
-                    
-                    html += `
-                        <div class="version-card">
-                            <div class="version-header">
-                                <span class="version-name">${version.name}</span>
-                                <span class="version-number">${version.number}</span>
-                            </div>
-                            <div class="version-description">${version.description}</div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                                <span class="version-status ${version.isActive ? 'status-active' : 'status-inactive'}">
-                                    ${version.isActive ? 'ACTIVE' : 'INACTIVE'}
-                                </span>
-                                <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
-                            </div>
-                            <div class="action-buttons">
-                                <button class="btn btn-secondary" onclick="editVersion('${doc.id ? doc.id : version.id}')" style="width: auto;">Edit</button>
-                                <button class="btn btn-primary" onclick="activateVersion('${doc.id ? doc.id : version.id}')" style="width: auto;" ${version.isActive ? 'disabled' : ''}>
-                                    ${version.isActive ? 'Active' : 'Activate'}
-                                </button>
-                                <button class="btn" onclick="deleteVersion('${doc.id ? doc.id : version.id}')" style="width: auto; background: #dc2626; color: white;">Delete</button>
-                            </div>
+                if (snapshot.empty) {
+                    html = `
+                        <div class="empty-state">
+                            <i>📄</i>
+                            <p>No raw files created yet</p>
+                            <button class="btn btn-primary" onclick="switchTab('create')" style="margin-top: 15px;">
+                                Create Your First Raw File
+                            </button>
                         </div>
                     `;
-                });
+                } else {
+                    snapshot.forEach(doc => {
+                        const file = doc.data();
+                        currentRawFiles.push({
+                            id: doc.id,
+                            ...file
+                        });
+                        
+                        const date = file.createdAt ? file.createdAt.toDate().toLocaleDateString() : 'Unknown date';
+                        const preview = file.content.length > 200 ? 
+                            file.content.substring(0, 200) + '...' : file.content;
+                        
+                        html += `
+                            <div class="raw-file-card">
+                                <div class="raw-file-header">
+                                    <span class="raw-file-name">${file.name}</span>
+                                    <a href="/raw/${file.name}" target="_blank" class="raw-link">
+                                        /raw/${file.name}
+                                    </a>
+                                </div>
+                                <div class="raw-content-preview">${preview}</div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                    <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary" onclick="editRawFile('${doc.id}')" style="width: auto;">Edit</button>
+                                    <button class="btn btn-primary" onclick="viewRawFile('${doc.id}')" style="width: auto;">View</button>
+                                    <button class="btn" onclick="deleteRawFile('${doc.id}')" style="width: auto; background: #dc2626; color: white;">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('raw-files-list').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading raw files:', error);
+                document.getElementById('raw-files-list').innerHTML = 
+                    '<p style="color: #ff4444;">Error loading files: ' + error.message + '</p>';
             }
-            
-            document.getElementById('versions-list').innerHTML = html;
         }
 
-        // Edit version
-        async function editVersion(versionId) {
+        // Edit raw file
+        async function editRawFile(fileId) {
             try {
-                const versionDoc = await db.collection('versions').doc(versionId).get();
+                const fileDoc = await db.collection('raw_files').doc(fileId).get();
                 
-                if (!versionDoc.exists) {
-                    showStatus('Version not found', false);
+                if (!fileDoc.exists) {
+                    showStatus('File not found', false);
                     return;
                 }
                 
-                const version = versionDoc.data();
+                const file = fileDoc.data();
                 
-                document.getElementById('version-name').value = version.name;
-                document.getElementById('version-number').value = version.number;
-                document.getElementById('version-description').value = version.description;
+                document.getElementById('raw-name').value = file.name;
+                document.getElementById('raw-content').value = file.content;
                 
                 // Scroll to form
-                document.getElementById('version-form').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('raw-form').scrollIntoView({ behavior: 'smooth' });
                 
                 // Set editing mode
                 isEditing = true;
-                editingVersionId = versionId;
-                document.getElementById('create-version-btn').textContent = 'Update Version';
+                editingRawId = fileId;
+                document.getElementById('create-raw-btn').textContent = 'Update Raw File';
+                
+                // Switch to create tab
+                switchTab('create');
                 
             } catch (error) {
-                console.error('Error loading version for edit:', error);
-                showStatus('Error loading version: ' + error.message, false);
+                console.error('Error loading file for edit:', error);
+                showStatus('Error loading file: ' + error.message, false);
             }
         }
 
-        // Activate version
-        async function activateVersion(versionId) {
-            try {
-                // Deactivate all versions
-                const versionsSnapshot = await db.collection('versions')
-                    .where('owner', '==', currentUser.email)
-                    .get();
-                
-                const batch = db.batch();
-                
-                versionsSnapshot.forEach(doc => {
-                    batch.update(doc.ref, { isActive: false });
-                });
-                
-                // Activate selected version
-                batch.update(db.collection('versions').doc(versionId), { 
-                    isActive: true,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                await batch.commit();
-                
-                showStatus('Version activated successfully!');
-                loadVersions();
-                loadRawContent();
-                
-            } catch (error) {
-                console.error('Error activating version:', error);
-                showStatus('Error activating version: ' + error.message, false);
+        // View raw file
+        function viewRawFile(fileId) {
+            const file = currentRawFiles.find(f => f.id === fileId);
+            if (file) {
+                // Populate view tab
+                document.getElementById('view-raw-select').value = fileId;
+                loadRawForView();
+                switchTab('view');
             }
         }
 
-        // Delete version
-        async function deleteVersion(versionId) {
-            if (!confirm('Are you sure you want to delete this version?')) {
+        // Populate view selector
+        function populateViewSelector() {
+            const selector = document.getElementById('view-raw-select');
+            selector.innerHTML = '<option value="">-- Select a file --</option>';
+            
+            currentRawFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.id;
+                option.textContent = file.name;
+                selector.appendChild(option);
+            });
+        }
+
+        // Load raw for viewing
+        function loadRawForView() {
+            const fileId = document.getElementById('view-raw-select').value;
+            if (!fileId) {
+                document.getElementById('raw-view-container').classList.add('hidden');
+                return;
+            }
+            
+            const file = currentRawFiles.find(f => f.id === fileId);
+            if (file) {
+                document.getElementById('raw-content-viewer').textContent = file.content;
+                document.getElementById('raw-url-display').textContent = window.location.origin + '/raw/' + file.name;
+                document.getElementById('raw-view-container').classList.remove('hidden');
+            }
+        }
+
+        // Edit current raw file
+        function editCurrentRaw() {
+            const fileId = document.getElementById('view-raw-select').value;
+            if (fileId) {
+                editRawFile(fileId);
+            }
+        }
+
+        // Copy raw URL
+        function copyRawUrl() {
+            const url = document.getElementById('raw-url-display').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showStatus('URL copied to clipboard!');
+            }).catch(err => {
+                showStatus('Failed to copy URL: ' + err, false);
+            });
+        }
+
+        // Open raw in new tab
+        function openRawInNewTab() {
+            const url = document.getElementById('raw-url-display').textContent;
+            window.open(url, '_blank');
+        }
+
+        // Delete raw file
+        async function deleteRawFile(fileId) {
+            if (!confirm('Are you sure you want to delete this raw file?')) {
                 return;
             }
             
             try {
-                await db.collection('versions').doc(versionId).delete();
-                showStatus('Version deleted successfully!');
-                loadVersions();
-                loadRawContent();
-            } catch (error) {
-                console.error('Error deleting version:', error);
-                showStatus('Error deleting version: ' + error.message, false);
-            }
-        }
-
-        // Load raw content with fallback
-        async function loadRawContent() {
-            try {
-                const snapshot = await db.collection('versions')
-                    .where('owner', '==', currentUser.email)
-                    .where('isActive', '==', true)
-                    .limit(1)
-                    .get();
+                await db.collection('raw_files').doc(fileId).delete();
+                showStatus('Raw file deleted successfully!');
+                loadRawFiles();
                 
-                if (snapshot.empty) {
-                    document.getElementById('raw-content-display').textContent = 'No active version available.';
-                    return;
+                // Clear view if deleted file was being viewed
+                if (document.getElementById('view-raw-select').value === fileId) {
+                    document.getElementById('view-raw-select').value = '';
+                    document.getElementById('raw-view-container').classList.add('hidden');
                 }
-                
-                const version = snapshot.docs[0].data();
-                displayRawContent(version);
-                
             } catch (error) {
-                if (error.code === 'failed-precondition') {
-                    // Fallback: Load all and filter manually
-                    try {
-                        const fallbackSnapshot = await db.collection('versions')
-                            .where('owner', '==', currentUser.email)
-                            .get();
-                        
-                        const activeVersion = fallbackSnapshot.docs
-                            .map(doc => doc.data())
-                            .find(version => version.isActive === true);
-                        
-                        if (activeVersion) {
-                            displayRawContent(activeVersion);
-                        } else {
-                            document.getElementById('raw-content-display').textContent = 'No active version available.';
-                        }
-                    } catch (fallbackError) {
-                        document.getElementById('raw-content-display').textContent = 'Error loading content: ' + fallbackError.message;
-                    }
-                } else {
-                    document.getElementById('raw-content-display').textContent = 'Error loading content: ' + error.message;
-                }
+                console.error('Error deleting file:', error);
+                showStatus('Error deleting file: ' + error.message, false);
             }
-        }
-
-        function displayRawContent(version) {
-            const rawData = {
-                name: version.name,
-                version: version.number,
-                description: version.description,
-                owner: version.owner,
-                active: version.isActive,
-                lastUpdated: version.updatedAt ? version.updatedAt.toDate().toISOString() : 'Unknown'
-            };
-            
-            document.getElementById('raw-content-display').textContent = JSON.stringify(rawData, null, 2);
-        }
-
-        // Copy raw content to clipboard
-        function copyRawContent() {
-            const rawContent = document.getElementById('raw-content-display').textContent;
-            navigator.clipboard.writeText(rawContent).then(() => {
-                showStatus('Raw content copied to clipboard!');
-            }).catch(err => {
-                showStatus('Failed to copy content: ' + err, false);
-            });
         }
 
         // Firebase Auth State Listener
@@ -847,19 +838,51 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 
-                loadVersions();
-                loadRawContent();
+                loadRawFiles();
             } else {
                 document.getElementById('auth-card').classList.remove('hidden');
                 document.getElementById('dashboard-card').classList.add('hidden');
-                document.getElementById('index-warning').classList.add('hidden');
                 resetForm();
             }
         });
 
+        // Check if we're on a raw page
+        function checkRawPage() {
+            const path = window.location.pathname;
+            if (path.startsWith('/raw/')) {
+                const rawName = path.split('/raw/')[1];
+                loadRawContentForDisplay(rawName);
+            }
+        }
+
+        // Load raw content for display (for raw pages)
+        async function loadRawContentForDisplay(rawName) {
+            try {
+                const snapshot = await db.collection('raw_files')
+                    .where('name', '==', rawName)
+                    .limit(1)
+                    .get();
+                
+                if (snapshot.empty) {
+                    document.getElementById('raw-display-content').textContent = '404 - Raw file not found';
+                    return;
+                }
+                
+                const file = snapshot.docs[0].data();
+                document.getElementById('raw-display-content').textContent = file.content;
+                
+                // Set content type for proper raw display
+                document.querySelector('meta[name="description"]')?.remove();
+                
+            } catch (error) {
+                document.getElementById('raw-display-content').textContent = 'Error loading raw content: ' + error.message;
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Version Management System Initialized');
+            console.log('🚀 Raw Text Management System Initialized');
+            checkRawPage();
         });
     </script>
 </body>
