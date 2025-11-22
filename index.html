@@ -3,284 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raw Link Manager - Fixed</title>
+    <title>Raw Link Manager</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #f8fafc;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #ff0000;
-        }
-
-        .card {
-            background: rgba(30, 41, 59, 0.9);
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff0000;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #475569;
-            background: rgba(15, 23, 42, 0.6);
-            color: #f8fafc;
-            font-size: 16px;
-        }
-
-        textarea {
-            min-height: 200px;
-            resize: vertical;
-            font-family: 'Courier New', monospace;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #ff0000;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-        }
-
-        .btn-primary {
-            background: #ff0000;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #cc0000;
-        }
-
-        .btn-secondary {
-            background: #475569;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #334155;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .raw-file-card {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .raw-file-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .raw-file-name {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #ff0000;
-        }
-
-        .raw-link {
-            background: rgba(255, 0, 0, 0.2);
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #ff6b6b;
-            text-decoration: none;
-        }
-
-        .raw-content-preview {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            max-height: 150px;
-            overflow-y: auto;
-            color: #94a3b8;
-        }
-
-        .info-box {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .status-message {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .status-success {
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            color: #00ff00;
-        }
-
-        .status-error {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: #ff4444;
-        }
-
-        .loading {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .raw-viewer {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 15px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            min-height: 300px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .copy-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .url-display {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            border-left: 4px solid #ff0000;
-        }
-
-        .url-display code {
-            font-family: 'Courier New', monospace;
-            color: #ff6b6b;
-            word-break: break-all;
-            display: block;
-            margin: 10px 0;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #94a3b8;
-        }
-
-        small {
-            color: #94a3b8;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: block;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; padding: 40px 20px; background: rgba(15, 23, 42, 0.8); border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255, 0, 0, 0.3); }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; color: #ff0000; }
+        .card { background: rgba(30, 41, 59, 0.9); border-radius: 10px; padding: 30px; margin-bottom: 20px; border: 1px solid rgba(255, 0, 0, 0.2); }
+        .tabs { display: flex; margin-bottom: 20px; background: rgba(15, 23, 42, 0.6); border-radius: 8px; overflow: hidden; }
+        .tab { flex: 1; padding: 15px; background: transparent; border: none; color: #94a3b8; cursor: pointer; transition: all 0.3s; }
+        .tab.active { background: rgba(255, 0, 0, 0.2); color: #ff0000; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #94a3b8; font-weight: 500; }
+        input, textarea, select { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #475569; background: rgba(15, 23, 42, 0.6); color: #f8fafc; font-size: 16px; }
+        textarea { min-height: 200px; resize: vertical; font-family: 'Courier New', monospace; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #ff0000; }
+        .btn { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s; margin-bottom: 10px; }
+        .btn-primary { background: #ff0000; color: white; }
+        .btn-primary:hover { background: #cc0000; }
+        .btn-secondary { background: #475569; color: white; }
+        .btn-secondary:hover { background: #334155; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .raw-file-card { background: rgba(15, 23, 42, 0.6); border-radius: 8px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .raw-file-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .raw-file-name { font-size: 1.2em; font-weight: 600; color: #ff0000; }
+        .raw-link { background: rgba(255, 0, 0, 0.2); padding: 8px 12px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9em; color: #ff6b6b; text-decoration: none; }
+        .raw-content-preview { background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 15px; margin-top: 10px; font-family: 'Courier New', monospace; white-space: pre-wrap; max-height: 150px; overflow-y: auto; color: #94a3b8; }
+        .info-box { background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .hidden { display: none; }
+        .status-message { padding: 10px; border-radius: 5px; margin: 10px 0; text-align: center; }
+        .status-success { background: rgba(0, 255, 0, 0.1); border: 1px solid rgba(0, 255, 0, 0.3); color: #00ff00; }
+        .status-error { background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); color: #ff4444; }
+        .loading { opacity: 0.7; cursor: not-allowed; }
+        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .raw-viewer { background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 20px; margin-top: 15px; font-family: 'Courier New', monospace; white-space: pre-wrap; min-height: 300px; max-height: 500px; overflow-y: auto; }
+        .copy-btn { background: #3b82f6; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .url-display { background: rgba(0, 0, 0, 0.5); border-radius: 8px; padding: 15px; margin: 15px 0; border-left: 4px solid #ff0000; }
+        .url-display code { font-family: 'Courier New', monospace; color: #ff6b6b; word-break: break-all; display: block; margin: 10px 0; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
+        small { color: #94a3b8; font-size: 0.9em; margin-top: 5px; display: block; }
+        
+        /* Raw Display Mode */
+        .raw-mode { background: #0f0f0f; color: #00ff00; font-family: 'Courier New', monospace; white-space: pre-wrap; padding: 20px; margin: 0; min-height: 100vh; }
     </style>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -288,123 +55,131 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🔗 Raw Link Manager - FIXED</h1>
-            <p>Create and manage raw text files with direct links</p>
-        </header>
+    <!-- Raw Display Mode (Shows when URL has ?raw=filename) -->
+    <div id="raw-display-mode" class="hidden">
+        <pre id="raw-content-display">Loading raw content...</pre>
+    </div>
 
-        <!-- Auth Card -->
-        <div class="card" id="auth-card">
-            <div class="tabs">
-                <button class="tab active" data-tab="login">Login</button>
-                <button class="tab" data-tab="register">Register</button>
-            </div>
+    <!-- Main App Mode -->
+    <div id="app-mode">
+        <div class="container">
+            <header>
+                <h1>🔗 Raw Link Manager</h1>
+                <p>Create and manage raw text files with direct links</p>
+            </header>
 
-            <!-- Login Tab -->
-            <div class="tab-content active" id="login-content">
-                <form id="login-form">
-                    <div class="form-group">
-                        <input type="email" id="login-email" placeholder="Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="login-password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-            </div>
-
-            <!-- Register Tab -->
-            <div class="tab-content" id="register-content">
-                <form id="register-form">
-                    <div class="form-group">
-                        <input type="email" id="register-email" placeholder="Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="register-password" placeholder="Password (min 6 characters)" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </form>
-            </div>
-
-            <div id="auth-status"></div>
-        </div>
-
-        <!-- Dashboard Card -->
-        <div class="card hidden" id="dashboard-card">
-            <div class="dashboard-header">
-                <h2 style="color: #ff0000;">Dashboard</h2>
-                <div>
-                    <span id="user-email" style="color: #94a3b8; margin-right: 15px;"></span>
-                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            <!-- Auth Card -->
+            <div class="card" id="auth-card">
+                <div class="tabs">
+                    <button class="tab active" data-tab="login">Login</button>
+                    <button class="tab" data-tab="register">Register</button>
                 </div>
-            </div>
 
-            <div class="tabs">
-                <button class="tab active" data-tab="create">Create Raw</button>
-                <button class="tab" data-tab="manage">Manage Files</button>
-                <button class="tab" data-tab="view">View Raw</button>
-            </div>
-
-            <!-- Create Raw -->
-            <div class="tab-content active" id="create-content">
-                <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">➕ Create New Raw File</h3>
-                    <form id="raw-form">
+                <!-- Login Tab -->
+                <div class="tab-content active" id="login-content">
+                    <form id="login-form">
                         <div class="form-group">
-                            <label for="raw-name">File Name (URL)</label>
-                            <input type="text" id="raw-name" placeholder="my-config, readme, data" required>
-                            <small>This will create: your-site.com/raw/[name]</small>
+                            <input type="email" id="login-email" placeholder="Email" required>
                         </div>
                         <div class="form-group">
-                            <label for="raw-version">Version</label>
-                            <input type="text" id="raw-version" placeholder="1.0.0" required>
+                            <input type="password" id="login-password" placeholder="Password" required>
                         </div>
-                        <div class="form-group">
-                            <label for="raw-content">Content</label>
-                            <textarea id="raw-content" placeholder="Enter your raw text content..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="create-raw-btn">Create Raw File</button>
+                        <button type="submit" class="btn btn-primary">Login</button>
                     </form>
                 </div>
+
+                <!-- Register Tab -->
+                <div class="tab-content" id="register-content">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <input type="email" id="register-email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="register-password" placeholder="Password (min 6 characters)" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+
+                <div id="auth-status"></div>
             </div>
 
-            <!-- Manage Files -->
-            <div class="tab-content" id="manage-content">
-                <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">📁 Your Raw Files</h3>
-                    <div id="raw-files-list">
-                        <div class="empty-state">
-                            <p>📄 No raw files created yet</p>
-                            <button class="btn btn-primary" onclick="switchTab('create')">Create First File</button>
+            <!-- Dashboard Card -->
+            <div class="card hidden" id="dashboard-card">
+                <div class="dashboard-header">
+                    <h2 style="color: #ff0000;">Dashboard</h2>
+                    <div>
+                        <span id="user-email" style="color: #94a3b8; margin-right: 15px;"></span>
+                        <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="create">Create Raw</button>
+                    <button class="tab" data-tab="manage">Manage Files</button>
+                    <button class="tab" data-tab="view">View Raw</button>
+                </div>
+
+                <!-- Create Raw -->
+                <div class="tab-content active" id="create-content">
+                    <div class="info-box">
+                        <h3 style="margin-bottom: 15px;">➕ Create New Raw File</h3>
+                        <form id="raw-form">
+                            <div class="form-group">
+                                <label for="raw-name">File Name (URL)</label>
+                                <input type="text" id="raw-name" placeholder="my-config, readme, data" required>
+                                <small>This will create: https://database.mynibir.workers.dev/?raw=[name]</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="raw-version">Version</label>
+                                <input type="text" id="raw-version" placeholder="1.0.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="raw-content">Content</label>
+                                <textarea id="raw-content" placeholder="Enter your raw text content..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="create-raw-btn">Create Raw File</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Manage Files -->
+                <div class="tab-content" id="manage-content">
+                    <div class="info-box">
+                        <h3 style="margin-bottom: 15px;">📁 Your Raw Files</h3>
+                        <div id="raw-files-list">
+                            <div class="empty-state">
+                                <p>📄 No raw files created yet</p>
+                                <button class="btn btn-primary" onclick="switchTab('create')">Create First File</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- View Raw -->
-            <div class="tab-content" id="view-content">
-                <div class="info-box">
-                    <h3 style="margin-bottom: 15px;">👁️ View Raw Content</h3>
-                    <div class="form-group">
-                        <label for="view-raw-select">Select File</label>
-                        <select id="view-raw-select" onchange="loadRawForView()">
-                            <option value="">-- Select file --</option>
-                        </select>
-                    </div>
-                    
-                    <div id="raw-view-container" class="hidden">
-                        <div class="url-display">
-                            <strong>Raw URL:</strong>
-                            <code id="raw-url-display"></code>
-                            <button class="copy-btn" onclick="copyRawUrl()">Copy URL</button>
+                <!-- View Raw -->
+                <div class="tab-content" id="view-content">
+                    <div class="info-box">
+                        <h3 style="margin-bottom: 15px;">👁️ View Raw Content</h3>
+                        <div class="form-group">
+                            <label for="view-raw-select">Select File</label>
+                            <select id="view-raw-select" onchange="loadRawForView()">
+                                <option value="">-- Select file --</option>
+                            </select>
                         </div>
                         
-                        <div class="raw-viewer" id="raw-content-viewer"></div>
-                        
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" onclick="editCurrentRaw()">Edit</button>
-                            <button class="btn btn-secondary" onclick="openRawInNewTab()">Open Raw</button>
+                        <div id="raw-view-container" class="hidden">
+                            <div class="url-display">
+                                <strong>Raw URL:</strong>
+                                <code id="raw-url-display"></code>
+                                <button class="copy-btn" onclick="copyRawUrl()">Copy URL</button>
+                            </div>
+                            
+                            <div class="raw-viewer" id="raw-content-viewer"></div>
+                            
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="editCurrentRaw()">Edit</button>
+                                <button class="btn btn-secondary" onclick="openRawInNewTab()">Open Raw</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -433,6 +208,52 @@
         let isEditing = false;
         let editingRawId = null;
         let currentRawFiles = [];
+
+        // Check if we're in raw display mode
+        function checkRawMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rawName = urlParams.get('raw');
+            
+            if (rawName) {
+                // Show raw display mode
+                document.getElementById('app-mode').classList.add('hidden');
+                document.getElementById('raw-display-mode').classList.remove('hidden');
+                document.body.classList.add('raw-mode');
+                loadRawContent(rawName);
+                return true;
+            }
+            return false;
+        }
+
+        // Load raw content for display
+        async function loadRawContent(fileName) {
+            try {
+                // First try with owner filter
+                let snapshot = await db.collection('raw_files')
+                    .where('name', '==', fileName)
+                    .limit(1)
+                    .get();
+
+                // If no results, try without owner filter (for public access)
+                if (snapshot.empty) {
+                    snapshot = await db.collection('raw_files')
+                        .where('name', '==', fileName)
+                        .limit(1)
+                        .get();
+                }
+
+                if (snapshot.empty) {
+                    document.getElementById('raw-content-display').textContent = '404 - File not found: ' + fileName;
+                    return;
+                }
+
+                const file = snapshot.docs[0].data();
+                document.getElementById('raw-content-display').textContent = file.content;
+
+            } catch (error) {
+                document.getElementById('raw-content-display').textContent = 'Error loading file: ' + error.message;
+            }
+        }
 
         function showStatus(message, isSuccess = true) {
             const statusDiv = document.getElementById('auth-status');
@@ -543,7 +364,7 @@
                     showStatus('Raw file updated successfully!');
                     resetForm();
                 } else {
-                    // Check if name already exists
+                    // Check if name already exists for this user
                     const existingSnapshot = await db.collection('raw_files')
                         .where('owner', '==', currentUser.email)
                         .where('name', '==', name)
@@ -591,65 +412,99 @@
             document.getElementById('create-raw-btn').textContent = 'Create Raw File';
         }
 
-        // Load raw files
+        // Load raw files (with index error handling)
         async function loadRawFiles() {
             try {
+                // Try the optimized query first
                 const snapshot = await db.collection('raw_files')
                     .where('owner', '==', currentUser.email)
                     .orderBy('createdAt', 'desc')
                     .get();
                 
-                currentRawFiles = [];
-                let html = '';
-                
-                if (snapshot.empty) {
-                    html = `
-                        <div class="empty-state">
-                            <p>📄 No raw files created yet</p>
-                            <button class="btn btn-primary" onclick="switchTab('create')">Create First File</button>
-                        </div>
-                    `;
-                } else {
-                    snapshot.forEach(doc => {
-                        const file = doc.data();
-                        currentRawFiles.push({
-                            id: doc.id,
-                            ...file
-                        });
-                        
-                        const date = file.createdAt ? file.createdAt.toDate().toLocaleDateString() : 'Unknown date';
-                        const preview = file.content.length > 200 ? 
-                            file.content.substring(0, 200) + '...' : file.content;
-                        
-                        html += `
-                            <div class="raw-file-card">
-                                <div class="raw-file-header">
-                                    <span class="raw-file-name">${file.name} (v${file.version})</span>
-                                    <a href="raw-display.html?name=${file.name}" target="_blank" class="raw-link">
-                                        /raw/${file.name}
-                                    </a>
-                                </div>
-                                <div class="raw-content-preview">${preview}</div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                                    <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
-                                </div>
-                                <div class="action-buttons">
-                                    <button class="btn btn-secondary" onclick="editRawFile('${doc.id}')">Edit</button>
-                                    <button class="btn btn-primary" onclick="viewRawFile('${doc.id}')">View</button>
-                                    <button class="btn" onclick="deleteRawFile('${doc.id}')" style="background: #dc2626; color: white;">Delete</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                
-                document.getElementById('raw-files-list').innerHTML = html;
+                displayRawFiles(snapshot);
                 
             } catch (error) {
-                console.error('Error loading raw files:', error);
-                document.getElementById('raw-files-list').innerHTML = 
-                    '<p style="color: #ff4444;">Error loading files: ' + error.message + '</p>';
+                if (error.code === 'failed-precondition') {
+                    // Fallback: Load without ordering
+                    try {
+                        const fallbackSnapshot = await db.collection('raw_files')
+                            .where('owner', '==', currentUser.email)
+                            .get();
+                        
+                        // Sort manually
+                        const sortedDocs = fallbackSnapshot.docs.sort((a, b) => {
+                            const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+                            const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+                            return bTime - aTime;
+                        });
+                        
+                        const manualSnapshot = {
+                            empty: sortedDocs.length === 0,
+                            forEach: (callback) => sortedDocs.forEach(callback)
+                        };
+                        
+                        displayRawFiles(manualSnapshot);
+                        
+                    } catch (fallbackError) {
+                        console.error('Fallback error:', fallbackError);
+                        document.getElementById('raw-files-list').innerHTML = 
+                            '<p style="color: #ff4444;">Please create Firebase index</p>';
+                    }
+                } else {
+                    document.getElementById('raw-files-list').innerHTML = 
+                        '<p style="color: #ff4444;">Error: ' + error.message + '</p>';
+                }
             }
+        }
+
+        function displayRawFiles(snapshot) {
+            currentRawFiles = [];
+            let html = '';
+            
+            if (snapshot.empty) {
+                html = `
+                    <div class="empty-state">
+                        <p>📄 No raw files created yet</p>
+                        <button class="btn btn-primary" onclick="switchTab('create')">Create First File</button>
+                    </div>
+                `;
+            } else {
+                snapshot.forEach(doc => {
+                    const file = doc.data ? doc.data() : doc;
+                    currentRawFiles.push({
+                        id: doc.id ? doc.id : file.id,
+                        ...file
+                    });
+                    
+                    const date = file.createdAt ? file.createdAt.toDate().toLocaleDateString() : 'Unknown date';
+                    const preview = file.content.length > 200 ? 
+                        file.content.substring(0, 200) + '...' : file.content;
+                    
+                    const rawUrl = window.location.origin + window.location.pathname + '?raw=' + file.name;
+                    
+                    html += `
+                        <div class="raw-file-card">
+                            <div class="raw-file-header">
+                                <span class="raw-file-name">${file.name} (v${file.version})</span>
+                                <a href="${rawUrl}" target="_blank" class="raw-link">
+                                    ?raw=${file.name}
+                                </a>
+                            </div>
+                            <div class="raw-content-preview">${preview}</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary" onclick="editRawFile('${doc.id ? doc.id : file.id}')">Edit</button>
+                                <button class="btn btn-primary" onclick="viewRawFile('${doc.id ? doc.id : file.id}')">View</button>
+                                <button class="btn" onclick="deleteRawFile('${doc.id ? doc.id : file.id}')" style="background: #dc2626; color: white;">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('raw-files-list').innerHTML = html;
         }
 
         // Edit raw file
@@ -716,7 +571,7 @@
             const file = currentRawFiles.find(f => f.id === fileId);
             if (file) {
                 document.getElementById('raw-content-viewer').textContent = file.content;
-                document.getElementById('raw-url-display').textContent = window.location.origin + '/raw-display.html?name=' + file.name;
+                document.getElementById('raw-url-display').textContent = window.location.origin + window.location.pathname + '?raw=' + file.name;
                 document.getElementById('raw-view-container').classList.remove('hidden');
             }
         }
@@ -756,7 +611,6 @@
                 showStatus('Raw file deleted successfully!');
                 loadRawFiles();
                 
-                // Clear view if deleted file was being viewed
                 if (document.getElementById('view-raw-select').value === fileId) {
                     document.getElementById('view-raw-select').value = '';
                     document.getElementById('raw-view-container').classList.add('hidden');
@@ -786,7 +640,13 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Raw Link Manager Initialized - FIXED VERSION');
+            console.log('🚀 Raw Link Manager Initialized');
+            
+            // Check if we should show raw content
+            if (!checkRawMode()) {
+                // Normal app mode
+                console.log('Running in app mode');
+            }
         });
     </script>
 </body>
