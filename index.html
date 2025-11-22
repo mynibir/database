@@ -281,6 +281,20 @@
         .copy-btn:hover {
             background: #2563eb;
         }
+
+        .index-warning {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #ffa500;
+        }
+
+        .index-warning a {
+            color: #ffa500;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -340,6 +354,14 @@
                     <span id="user-email" style="color: #94a3b8; margin-right: 15px;"></span>
                     <button class="btn btn-secondary" onclick="logout()" style="width: auto;">Logout</button>
                 </div>
+            </div>
+
+            <!-- Index Warning -->
+            <div class="index-warning hidden" id="index-warning">
+                <strong>⚠️ Performance Notice:</strong> For better performance, create a Firestore index. 
+                <a href="https://console.firebase.google.com/v1/r/project/dashboard-config-ace02/firestore/indexes?create_composite=Cldwcm9qZWN0cy9kYXNoYm9hcmQtY29uZmlnLWFjZTAyL2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy92ZXJzaW9ucy9pbmRleGVzL18QARoJCgVvd25lchABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI" target="_blank">
+                    Click here to create the index automatically
+                </a>
             </div>
 
             <div class="tabs">
@@ -574,54 +596,93 @@
             document.getElementById('create-version-btn').textContent = 'Create Version';
         }
 
-        // Load user versions
+        // Load user versions with fallback for index issues
         async function loadVersions() {
             try {
+                // Try the optimized query first (with ordering)
                 const snapshot = await db.collection('versions')
                     .where('owner', '==', currentUser.email)
                     .orderBy('createdAt', 'desc')
                     .get();
                 
-                let html = '';
-                
-                if (snapshot.empty) {
-                    html = '<p style="text-align: center; color: #94a3b8;">No versions created yet.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const version = doc.data();
-                        const date = version.createdAt ? version.createdAt.toDate().toLocaleDateString() : 'Unknown date';
-                        
-                        html += `
-                            <div class="version-card">
-                                <div class="version-header">
-                                    <span class="version-name">${version.name}</span>
-                                    <span class="version-number">${version.number}</span>
-                                </div>
-                                <div class="version-description">${version.description}</div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                                    <span class="version-status ${version.isActive ? 'status-active' : 'status-inactive'}">
-                                        ${version.isActive ? 'ACTIVE' : 'INACTIVE'}
-                                    </span>
-                                    <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
-                                </div>
-                                <div class="action-buttons">
-                                    <button class="btn btn-secondary" onclick="editVersion('${doc.id}')" style="width: auto;">Edit</button>
-                                    <button class="btn btn-primary" onclick="activateVersion('${doc.id}')" style="width: auto;" ${version.isActive ? 'disabled' : ''}>
-                                        ${version.isActive ? 'Active' : 'Activate'}
-                                    </button>
-                                    <button class="btn" onclick="deleteVersion('${doc.id}')" style="width: auto; background: #dc2626; color: white;">Delete</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                
-                document.getElementById('versions-list').innerHTML = html;
+                displayVersions(snapshot);
                 
             } catch (error) {
-                console.error('Error loading versions:', error);
-                document.getElementById('versions-list').innerHTML = '<p style="color: #ff4444;">Error loading versions: ' + error.message + '</p>';
+                if (error.code === 'failed-precondition') {
+                    // Show index warning
+                    document.getElementById('index-warning').classList.remove('hidden');
+                    
+                    // Fallback: Load without ordering
+                    try {
+                        const fallbackSnapshot = await db.collection('versions')
+                            .where('owner', '==', currentUser.email)
+                            .get();
+                        
+                        // Sort manually in JavaScript
+                        const sortedDocs = fallbackSnapshot.docs.sort((a, b) => {
+                            const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+                            const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+                            return bTime - aTime;
+                        });
+                        
+                        // Create a new snapshot-like object
+                        const manualSnapshot = {
+                            empty: sortedDocs.length === 0,
+                            forEach: (callback) => sortedDocs.forEach(callback)
+                        };
+                        
+                        displayVersions(manualSnapshot);
+                        
+                    } catch (fallbackError) {
+                        console.error('Fallback also failed:', fallbackError);
+                        document.getElementById('versions-list').innerHTML = 
+                            '<p style="color: #ff4444;">Error loading versions: ' + fallbackError.message + '</p>';
+                    }
+                } else {
+                    console.error('Error loading versions:', error);
+                    document.getElementById('versions-list').innerHTML = 
+                        '<p style="color: #ff4444;">Error loading versions: ' + error.message + '</p>';
+                }
             }
+        }
+
+        // Display versions (common function for both methods)
+        function displayVersions(snapshot) {
+            let html = '';
+            
+            if (snapshot.empty) {
+                html = '<p style="text-align: center; color: #94a3b8;">No versions created yet.</p>';
+            } else {
+                snapshot.forEach(doc => {
+                    const version = doc.data ? doc.data() : doc; // Handle both DocumentSnapshot and plain objects
+                    const date = version.createdAt ? version.createdAt.toDate().toLocaleDateString() : 'Unknown date';
+                    
+                    html += `
+                        <div class="version-card">
+                            <div class="version-header">
+                                <span class="version-name">${version.name}</span>
+                                <span class="version-number">${version.number}</span>
+                            </div>
+                            <div class="version-description">${version.description}</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                <span class="version-status ${version.isActive ? 'status-active' : 'status-inactive'}">
+                                    ${version.isActive ? 'ACTIVE' : 'INACTIVE'}
+                                </span>
+                                <span style="color: #94a3b8; font-size: 0.9em;">Created: ${date}</span>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary" onclick="editVersion('${doc.id ? doc.id : version.id}')" style="width: auto;">Edit</button>
+                                <button class="btn btn-primary" onclick="activateVersion('${doc.id ? doc.id : version.id}')" style="width: auto;" ${version.isActive ? 'disabled' : ''}>
+                                    ${version.isActive ? 'Active' : 'Activate'}
+                                </button>
+                                <button class="btn" onclick="deleteVersion('${doc.id ? doc.id : version.id}')" style="width: auto; background: #dc2626; color: white;">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('versions-list').innerHTML = html;
         }
 
         // Edit version
@@ -703,7 +764,7 @@
             }
         }
 
-        // Load raw content
+        // Load raw content with fallback
         async function loadRawContent() {
             try {
                 const snapshot = await db.collection('versions')
@@ -718,21 +779,45 @@
                 }
                 
                 const version = snapshot.docs[0].data();
-                const rawData = {
-                    name: version.name,
-                    version: version.number,
-                    description: version.description,
-                    owner: version.owner,
-                    active: version.isActive,
-                    lastUpdated: version.updatedAt ? version.updatedAt.toDate().toISOString() : 'Unknown'
-                };
-                
-                document.getElementById('raw-content-display').textContent = JSON.stringify(rawData, null, 2);
+                displayRawContent(version);
                 
             } catch (error) {
-                console.error('Error loading raw content:', error);
-                document.getElementById('raw-content-display').textContent = 'Error loading content: ' + error.message;
+                if (error.code === 'failed-precondition') {
+                    // Fallback: Load all and filter manually
+                    try {
+                        const fallbackSnapshot = await db.collection('versions')
+                            .where('owner', '==', currentUser.email)
+                            .get();
+                        
+                        const activeVersion = fallbackSnapshot.docs
+                            .map(doc => doc.data())
+                            .find(version => version.isActive === true);
+                        
+                        if (activeVersion) {
+                            displayRawContent(activeVersion);
+                        } else {
+                            document.getElementById('raw-content-display').textContent = 'No active version available.';
+                        }
+                    } catch (fallbackError) {
+                        document.getElementById('raw-content-display').textContent = 'Error loading content: ' + fallbackError.message;
+                    }
+                } else {
+                    document.getElementById('raw-content-display').textContent = 'Error loading content: ' + error.message;
+                }
             }
+        }
+
+        function displayRawContent(version) {
+            const rawData = {
+                name: version.name,
+                version: version.number,
+                description: version.description,
+                owner: version.owner,
+                active: version.isActive,
+                lastUpdated: version.updatedAt ? version.updatedAt.toDate().toISOString() : 'Unknown'
+            };
+            
+            document.getElementById('raw-content-display').textContent = JSON.stringify(rawData, null, 2);
         }
 
         // Copy raw content to clipboard
@@ -767,6 +852,7 @@
             } else {
                 document.getElementById('auth-card').classList.remove('hidden');
                 document.getElementById('dashboard-card').classList.add('hidden');
+                document.getElementById('index-warning').classList.add('hidden');
                 resetForm();
             }
         });
